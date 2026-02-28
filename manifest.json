@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Feedex",
+  "version": "1.0.0",
+  "description": "Extension Google Chrome de gestion de listes de contacts LinkedIn",
+  "icons": {
+    "16": "assets/Logo feedex.png",
+    "48": "assets/Logo feedex.png",
+    "128": "assets/Logo feedex.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/Logo feedex.png",
+      "48": "assets/Logo feedex.png",
+      "128": "assets/Logo feedex.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "popup/popup.html"
+  },
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*"
+  ]
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedex</title>
+  <link rel="icon" type="image/png" href="../assets/Logo feedex.png">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="../assets/Logo feedex.png" alt="Feedex" class="logo">
+      <h1>Feedex</h1>
+      <p class="subtitle">Gestionnaire de contacts LinkedIn</p>
+    </header>
+
+    <form id="list-form" class="form">
+      <div class="form-group">
+        <label for="list-name">Nom de la liste</label>
+        <input 
+          type="text" 
+          id="list-name" 
+          name="listName" 
+          placeholder="Ex: Prospects, Clients, Réseau..."
+          required
+        >
+      </div>
+      <div class="form-group">
+        <label for="list-url">URL LinkedIn</label>
+        <input 
+          type="url" 
+          id="list-url" 
+          name="listUrl" 
+          placeholder="https://www.linkedin.com/in/..."
+          required
+        >
+      </div>
+      <button type="submit" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Ajouter la liste
+      </button>
+    </form>
+
+    <button id="chatbot-toggle" class="btn-secondary" style="margin-top: 16px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Assistant IA
+    </button>
+
+    <div class="divider"></div>
+
+    <section class="lists-section">
+      <h2>Mes listes</h2>
+      <div id="lists-container" class="lists-container">
+        <p class="empty-state">Aucune liste créée. Ajoutez votre première liste ci-dessus.</p>
+      </div>
+    </section>
+  </div>
+
+  <div id="chatbot-panel" class="chatbot-panel hidden">
+    <div class="chatbot-header">
+      <h3>Assistant IA</h3>
+      <div class="chatbot-header-actions">
+        <button id="chatbot-new-chat" class="btn-icon" title="Nouvelle discussion">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M8 16H3v5"/>
+          </svg>
+        </button>
+        <button id="chatbot-settings-toggle" class="btn-icon" title="Paramètres">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <button id="chatbot-close" class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/>
+            <path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="chatbot-settings" class="chatbot-settings hidden">
+      <div class="chatbot-settings-header">
+        <button id="chatbot-settings-back" class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+        </button>
+      </div>
+      <div class="form-group">
+        <label for="api-key">Clé API OpenRouter</label>
+        <div class="input-with-button">
+          <input type="password" id="api-key" placeholder="sk-...">
+          <button id="save-api-key" class="btn-small btn-primary">Enregistrer</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="model-select">Modèle</label>
+        <div class="input-with-button">
+          <select id="model-select">
+            <option value="">Sélectionnez un modèle</option>
+          </select>
+          <button id="fetch-models" class="btn-small btn-secondary">↻</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Custom Instructions</label>
+        <div class="custom-instruction-input">
+          <input type="text" id="instruction-name" placeholder="Nom de l'instruction">
+          <textarea id="instruction-content" rows="5" placeholder="Instruction..."></textarea>
+          <button id="save-instruction" class="btn-small btn-primary">Ajouter</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Instructions enregistrées</label>
+        <div id="instructions-list" class="instructions-list"></div>
+      </div>
+      <div id="confirm-instruction-modal" class="settings-modal hidden">
+        <div class="settings-modal-content">
+          <p class="modal-text">Voulez-vous vraiment supprimer cette instruction ?</p>
+          <div class="modal-actions">
+            <button id="confirm-instruction-cancel" class="btn-small btn-cancel">Annuler</button>
+            <button id="confirm-instruction-delete" class="btn-small btn-danger">Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+
+    <div class="chatbot-instruction-bar">
+      <select id="instruction-select">
+        <option value="">Sans instruction</option>
+      </select>
+    </div>
+
+    <div class="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Envoyer un message..." disabled>
+      <button id="chatbot-send" class="btn-icon" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m22 2-7 20-4-9-9-4Z"/>
+          <path d="M22 2 11 13"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="modal hidden">
+    <div class="modal-content">
+      <p class="modal-text">Voulez-vous vraiment supprimer cette liste ?</p>
+      <div class="modal-actions">
+        <button id="confirm-cancel" class="btn-small btn-cancel">Annuler</button>
+        <button id="confirm-delete" class="btn-small btn-danger">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
