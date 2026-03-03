@@ -1,6 +1,7 @@
 # Feedex
 
-Extension Google Chrome de gestion de listes de contacts LinkedIn.
+Extension Google Chrome de gestion de listes de contacts LinkedIn avec un assistant IA 
+connecté à OpenRouter par API.
 
 ## Fonctionnalités
 
