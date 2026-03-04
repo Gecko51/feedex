@@ -692,7 +692,9 @@ async function handleInstructionSelectChange() {
     activeInstructionId
   };
 
-  chrome.storage.local.set({ [CHAT_STORAGE_KEY]: settings });
+  chrome.storage.local.set({ [CHAT_STORAGE_KEY]: settings }, () => {
+    renderInstructionsList();
+  });
 }
 
 /**
