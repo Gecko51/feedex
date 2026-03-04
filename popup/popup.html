@@ -125,35 +125,50 @@
             <path d="M19 12H5"/>
           </svg>
         </button>
+        <h3 class="settings-title">Paramètres IA</h3>
       </div>
-      <div class="form-group">
-        <label for="api-key">Clé API OpenRouter</label>
-        <div class="input-with-button">
-          <input type="password" id="api-key" placeholder="sk-...">
-          <button id="save-api-key" class="btn-small btn-primary">Enregistrer</button>
+
+      <div class="settings-section">
+        <h4 class="section-title">Configuration API</h4>
+        <div class="form-group">
+          <label for="api-key">Clé API OpenRouter</label>
+          <div class="input-with-button">
+            <input type="password" id="api-key" placeholder="sk-...">
+            <button id="save-api-key" class="btn-small btn-primary">Enregistrer</button>
+          </div>
+          <p class="setting-help">Nécessaire pour communiquer avec les modèles d'IA.</p>
+        </div>
+        <div class="form-group" style="margin-top: 8px;">
+          <label for="model-select">Modèle d'IA par défaut</label>
+          <div class="input-with-button">
+            <select id="model-select">
+              <option value="">Sélectionnez un modèle</option>
+            </select>
+            <button id="fetch-models" class="btn-small btn-secondary" title="Actualiser les modèles">↻</button>
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="model-select">Modèle</label>
-        <div class="input-with-button">
-          <select id="model-select">
-            <option value="">Sélectionnez un modèle</option>
-          </select>
-          <button id="fetch-models" class="btn-small btn-secondary">↻</button>
+
+      <div class="divider" style="margin: 16px 0;"></div>
+
+      <div class="settings-section">
+        <h4 class="section-title">Instructions Personnalisées</h4>
+        <p class="setting-help" style="margin-bottom: 12px;">Créez des "prompts" de base (ex: Résumer, Traduire, Analyser) pour guider le comportement de l'IA.</p>
+        
+        <div class="custom-instruction-box">
+          <div class="custom-instruction-input">
+            <input type="text" id="instruction-name" placeholder="Nom du raccourci (ex: Résumer)">
+            <textarea id="instruction-content" rows="3" placeholder="Comporte-toi comme un expert et résume..."></textarea>
+            <button id="save-instruction" class="btn-small btn-primary">Ajouter l'instruction</button>
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px;">
+          <label>Vos instructions sauvegardées</label>
+          <div id="instructions-list" class="instructions-list"></div>
         </div>
       </div>
-      <div class="form-group">
-        <label>Custom Instructions</label>
-        <div class="custom-instruction-input">
-          <input type="text" id="instruction-name" placeholder="Nom de l'instruction">
-          <textarea id="instruction-content" rows="5" placeholder="Instruction..."></textarea>
-          <button id="save-instruction" class="btn-small btn-primary">Ajouter</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Instructions enregistrées</label>
-        <div id="instructions-list" class="instructions-list"></div>
-      </div>
+
       <div id="confirm-instruction-modal" class="settings-modal hidden">
         <div class="settings-modal-content">
           <p class="modal-text">Voulez-vous vraiment supprimer cette instruction ?</p>

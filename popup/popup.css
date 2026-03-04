@@ -1145,3 +1145,51 @@ body {
     font-size: 12px;
   }
 }
+
+.settings-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-left: 8px;
+  flex: 1;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 12px;
+  background-color: var(--accent);
+  border-radius: 2px;
+}
+
+.setting-help {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.custom-instruction-box {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 12px;
+}
