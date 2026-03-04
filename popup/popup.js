@@ -18,6 +18,7 @@ let activeInstructionId = null;
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
+  setupStatsHandlers();
   loadLists();
   setupFormHandler();
   setupModalHandlers();
@@ -989,4 +990,135 @@ function renderChatMessages() {
   chatMessages.forEach(msg => {
     addMessage(msg.role, msg.content);
   });
+}
+
+
+/**
+ * Configure les gestionnaires pour les statistiques LinkedIn
+ */
+function setupStatsHandlers() {
+  const refreshBtn = document.getElementById('refresh-stats');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', refreshLinkedInStats);
+  }
+}
+
+/**
+ * Met à jour les statistiques depuis la page LinkedIn active
+ */
+async function refreshLinkedInStats() {
+  const refreshBtn = document.getElementById('refresh-stats');
+  const spinIcon = refreshBtn.querySelector('.spin-icon');
+  
+  try {
+    if (spinIcon) spinIcon.classList.add('spinning');
+    
+    // Vérifie si on est sur LinkedIn
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (!tab || !tab.url.includes('linkedin.com')) {
+      alert("Veuillez vous rendre sur votre page de profil LinkedIn pour mettre à jour les statistiques.");
+      return;
+    }
+    
+    // Injecte le script pour scrapper les données
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: scrapeLinkedInStats
+    });
+    
+    if (results && results[0]) {
+      const stats = results[0].result;
+      console.log("Stats récupérées:", stats);
+      
+      if (stats && stats.error) {
+        console.error("Erreur de récupération:", stats.error);
+        alert("Impossible de récupérer les statistiques. Erreur: " + stats.error);
+        return;
+      }
+      
+      if (stats) {
+        // Mise à jour de l'UI
+        if (stats.views !== undefined) document.getElementById('stat-views').textContent = stats.views;
+        if (stats.followers !== undefined) document.getElementById('stat-followers').textContent = stats.followers;
+        if (stats.impressions !== undefined) document.getElementById('stat-impressions').textContent = stats.impressions;
+      } else {
+         alert("Aucune donnée retournée par le script d'extraction.");
+      }
+    } else {
+       alert("L'injection du script a échoué. Assurez-vous d'avoir les permissions nécessaires.");
+    }
+  } catch (error) {
+    console.error("Erreur inattendue:", error);
+    alert("Erreur lors de la mise à jour : " + error.message);
+  } finally {
+    if (spinIcon) spinIcon.classList.remove('spinning');
+  }
+}
+
+/**
+ * Fonction injectée dans la page LinkedIn pour récupérer les statistiques.
+ * Le DOM de LinkedIn étant complexe et changeant, cette fonction tente
+ * de trouver les valeurs par mots-clés de façon "best effort".
+ */
+async function scrapeLinkedInStats() {
+  console.log("[Feedex] Début de l'extraction des statistiques...");
+  try {
+    const stats = {
+      views: null,
+      followers: null,
+      impressions: null,
+    };
+
+    // Helper plus robuste pour trouver les éléments
+    const extractNumberFromText = (textArr) => {
+      const elements = document.querySelectorAll('span, h2, h3, a, div, li, strong, button');
+      for (const el of elements) {
+        // Ignorer les éléments cachés ou avec trop de texte
+        if (el.textContent.length > 100 || el.offsetParent === null) continue;
+        
+        const text = el.textContent.toLowerCase().replace(/\s+/g, ' ').trim();
+        for (const t of textArr) {
+          if (text.includes(t.toLowerCase())) {
+            // Cherche un nombre (ex: "1 234", "1,234", "12.5k", "500+")
+            const match = text.match(/[\d\s,.]+[kK+M]?/);
+            if (match && match[0].trim().length > 0) {
+              console.log("[Feedex] Trouvé pour", t, ":", match[0].trim(), "dans", text);
+              return match[0].trim();
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    // 1. Abonnés / Followers
+    stats.followers = extractNumberFromText(['abonné', 'follower', 'abonnés', 'followers']);
+
+    // 2. Vues du profil
+    stats.views = extractNumberFromText(['vues du profil', 'profile view', 'vues de votre profil']);
+
+    // 3. Impressions
+    stats.impressions = extractNumberFromText(['impression', 'post impression']);
+
+
+            
+
+    console.log("[Feedex] Statistiques finales:", stats);
+
+    // Formater et remplacer null par "-"
+    for (const key in stats) {
+      if (!stats[key]) stats[key] = '-';
+      else {
+        // Nettoyage esthétique rapide
+        stats[key] = stats[key].toString().replace(/^0+/, '');
+        if (stats[key] === '') stats[key] = '0';
+      }
+    }
+
+    return stats;
+  } catch (error) {
+    console.error("[Feedex] Erreur fatale dans le scraper:", error);
+    return { error: error.message };
+  }
 }

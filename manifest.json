@@ -23,7 +23,9 @@
   },
   "permissions": [
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "activeTab",
+    "scripting"
   ],
   "host_permissions": [
     "*://*.linkedin.com/*"

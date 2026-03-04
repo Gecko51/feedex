@@ -53,6 +53,35 @@
 
     <div class="divider"></div>
 
+    <section class="stats-section">
+      <div class="stats-header">
+        <h2>Statistiques</h2>
+        <button id="refresh-stats" class="btn-icon refresh-btn" title="Mettre à jour depuis LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spin-icon">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+          </svg>
+        </button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Vues du profil</span>
+          <span class="stat-value" id="stat-views">-</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Abonnés</span>
+          <span class="stat-value" id="stat-followers">-</span>
+        </div>
+        
+        <div class="stat-card">
+          <span class="stat-label">Impressions</span>
+          <span class="stat-value" id="stat-impressions">-</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
     <section class="lists-section">
       <h2>Mes listes</h2>
       <div id="lists-container" class="lists-container">
